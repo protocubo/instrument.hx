@@ -3,10 +3,18 @@ import utest.Assert;
 class Test {
 	function new() {}
 
-	public function test_001_test_htrace()
+	public function test_001_trace_calls()
 	{
-		trace("Std::int", Std.int(1.1));
-		trace("Sys::systemName", Sys.systemName());
+		Assert.pass();
+	}
+
+	public function test_002_time_calls()
+	{
+		Assert.pass();
+	}
+
+	public function test_003_generic_instrumentation()
+	{
 		Assert.pass();
 	}
 

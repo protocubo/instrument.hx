@@ -3,6 +3,7 @@
 -cp test
 -cp lib
 -lib utest
+-lib assertion
 -D dump=pretty
 --macro instrument.Htrace.hijack("Test")
 --macro instrument.Timer.hijack("Test")
