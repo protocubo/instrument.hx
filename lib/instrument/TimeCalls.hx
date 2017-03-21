@@ -3,9 +3,37 @@ package instrument;
 import haxe.macro.Expr;
 using haxe.macro.ExprTools;
 
+typedef Seconds = Float;
+
 class TimeCalls {
-	public static dynamic function onTimed(start:Float, finish:Float, ?pos:haxe.PosInfos)
-		haxe.Log.trace('TIME ${Math.round((finish-start)*1e6)}us on ${pos.className}.${pos.methodName}', pos);
+	static var auto = [
+			// divisor := 1/factor
+			// keep sorted
+			{ divisor:1/3600, symbol:"hour" },
+			{ divisor:1/60, symbol:"min" },
+			{ divisor:1, symbol:"s" },
+			{ divisor:1e3, symbol:"ms" },
+			{ divisor:1e6, symbol:"μs" },
+			{ divisor:1e9, symbol:"ns" }
+		];
+
+	public static var unit:Null<{ divisor:Float, symbol:String }> = null;  // default to auto mode
+
+	public static dynamic function onTimed(start:Seconds, finish:Seconds, ?pos:haxe.PosInfos)
+	{
+		var t = finish  - start;
+		var u = unit;
+		if (u == null) {
+			// auto mode
+			// first, find the ideal divisor
+			var d = t != 0 ? 1/t : 1e6;
+			// then, find the best match
+			u = Lambda.find(auto, function (i) return i.divisor >= d);
+			if (u == null)
+				u = auto[auto.length - 1];
+		}
+		haxe.Log.trace('TIME ${Math.round(t*u.divisor)}${u.symbol} on ${pos.className}.${pos.methodName}', pos);
+	}
 
 #if macro
 	public static function hijack(type:String, ?field:String)
