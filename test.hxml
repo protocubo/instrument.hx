@@ -5,7 +5,7 @@
 -lib utest
 -lib assertion
 -D dump=pretty
---macro instrument.Htrace.hijack("Test")
---macro instrument.Timer.hijack("Test")
+--macro instrument.TraceCalls.hijack("Test")
+--macro instrument.TimeCalls.hijack("Test")
 -cmd neko test.n
 

@@ -9,6 +9,7 @@ using StringTools;
 using haxe.macro.ExprTools;
 
 class Instrument {
+#if macro
 	static var methods = new Array<Expr->Expr>();
 
 	public static function instrument(id:Int, ?only:String)
@@ -36,5 +37,6 @@ class Instrument {
 		// FIXME gracefully fail on macro, @:build, and @:genericBuild
 		Compiler.addMetadata('@:build(${bcall.toString()})', type);
 	}
+#end
 }
 

@@ -3,14 +3,13 @@ package instrument;
 import haxe.macro.Expr;
 using haxe.macro.ExprTools;
 
-// FIXME rename
-class Timer {
-	// FIXME split into call and exit events
-	public static dynamic function notify(start:Float, finish:Float, ?pos:haxe.PosInfos)
-		trace('TIME ${Math.round((finish-start)*1e6)}us on ${pos.className}.${pos.methodName}');
+class TimeCalls {
+	public static dynamic function onTimed(start:Float, finish:Float, ?pos:haxe.PosInfos)
+		haxe.Log.trace('TIME ${Math.round((finish-start)*1e6)}us on ${pos.className}.${pos.methodName}', pos);
 
+#if macro
 	public static function hijack(type:String, ?field:String)
-		Instrument.hijack(instrument.Timer.embed, type, field);
+		Instrument.hijack(instrument.TimeCalls.embed, type, field);
 
 	static function embedExit(e:Expr):Expr
 	{
@@ -19,13 +18,13 @@ class Timer {
 			case EReturn(u):
 				macro @:pos(e.pos) {
 					var __ins_ret__ = $u;
-					instrument.Timer.notify(__ins_start__, Sys.time());
+					instrument.Timer.onTimed(__ins_start__, Sys.time());
 					return __ins_ret__;
 				}
 			case EThrow(u):
 				macro @:pos(e.pos) {
 					var __ins_ret__ = $u;
-					instrument.Timer.notify(__ins_start__, Sys.time());
+					instrument.Timer.onTimed(__ins_start__, Sys.time());
 					throw __ins_ret__;
 				}
 			case _:
@@ -40,8 +39,9 @@ class Timer {
 		return macro @:pos(e.pos) {
 			var __ins_start__ = Sys.time();
 			$body;
-			instrument.Timer.notify(__ins_start__, Sys.time());
+			instrument.TimeCalls.onTimed(__ins_start__, Sys.time());
 		}
 	}
+#end
 }
 
