@@ -33,14 +33,15 @@ class TimeCalls {
 	}
 
 	@:allow(instrument.Instrument)
-	static function embed(e:Expr):Expr
+	static function embed(fun:Function):Function
 	{
-		var body = embedExit(e);
-		return macro @:pos(e.pos) {
+		var body = embedExit(fun.expr);
+		fun.expr = macro @:pos(fun.expr.pos) {
 			var __ins_start__ = Sys.time();
 			$body;
 			instrument.TimeCalls.onTimed(__ins_start__, Sys.time());
 		}
+		return fun;
 	}
 #end
 }

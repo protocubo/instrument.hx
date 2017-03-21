@@ -11,12 +11,13 @@ class TraceCalls {
 		Instrument.hijack(instrument.TraceCalls.embed, type, field);
 
 	@:allow(instrument.Instrument)
-	static function embed(e:Expr):Expr
+	static function embed(fun:Function):Function
 	{
-		return macro @:pos(e.pos) {
+		fun.expr = macro @:pos(fun.expr.pos) {
 			instrument.TraceCalls.onCalled();
-			$e;
+			${fun.expr};
 		}
+		return fun;
 	}
 #end
 }
