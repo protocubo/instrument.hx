@@ -10,7 +10,7 @@ using haxe.macro.ExprTools;
 
 class Instrument {
 #if macro
-	static var methods = new Array<Function->Function>();
+	static var methods = new Array<Field->Function->Function>();
 
 	public static function instrument(id:Int, ?only:String)
 	{
@@ -22,14 +22,14 @@ class Instrument {
 				continue;
 			switch f.kind {
 			case FFun(fun):
-				f.kind = FFun(embed(fun));
+				f.kind = FFun(embed(f, fun));
 			case FVar(_), FProp(_):
 			}
 		}
 		return fields;
 	}
 
-	public static function hijack(embed:Function->Function, type:String, ?field:String)
+	public static function hijack(embed:Field->Function->Function, type:String, ?field:String)
 	{
 		var id = methods.push(embed) - 1;
 		var bcall = macro instrument.Instrument.instrument($v{id}, $v{field});

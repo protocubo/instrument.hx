@@ -42,10 +42,10 @@ class Test {
 					calls.push('${pos.className}.${pos.methodName}');
 			}
 
-		var ls = SomeLocks.create(10);
-		ls.acquire(3);
-		ls.release(3);
-		ls.acquire(3);
+		var ls = SomeLocks.create(4);
+		ls.acquire(2);
+		ls.release(2);
+		ls.acquire(2);
 
 		Assert.same( [
 				"SomeLocks.create",
@@ -68,15 +68,15 @@ class Test {
 					times.push({ method:pos.methodName, time:(finish - start) });
 			}
 
-		var ls = SomeLocks.create(100);
-		ls.acquire(33);
-		ls.release(33);
-		ls.acquire(33);
+		var ls = SomeLocks.create(1000);
+		ls.acquire(314);
+		ls.release(314);
+		ls.acquire(314);
 		ls.releaseAll();
-		ls.acquire(75);
-		ls.acquire(33);
+		ls.acquire(750);
+		ls.acquire(314);
 
-		Assert.equals(2 + 3 + 101 + 2, times.length);
+		Assert.equals(2 + 3 + 1001 + 2, times.length);
 		Assert.equals("releaseAll", times[times.length - 3].method);
 		Assert.equals("release", times[3].method);
 		Assert.isTrue(times[times.length - 3].time >= times[3].time*100/2);
