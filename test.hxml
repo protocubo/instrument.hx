@@ -7,5 +7,7 @@
 -D dump=pretty
 --macro instrument.TraceCalls.hijack("Test")
 --macro instrument.TimeCalls.hijack("Test")
+--macro instrument.TraceCalls.hijack("SomeLocks")
+--macro instrument.TimeCalls.hijack("SomeLocks")
 -cmd neko test.n
 

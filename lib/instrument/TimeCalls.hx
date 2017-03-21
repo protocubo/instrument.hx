@@ -18,13 +18,13 @@ class TimeCalls {
 			case EReturn(u):
 				macro @:pos(e.pos) {
 					var __ins_ret__ = $u;
-					instrument.Timer.onTimed(__ins_start__, Sys.time());
+					instrument.TimeCalls.onTimed(__ins_start__, Sys.time());
 					return __ins_ret__;
 				}
 			case EThrow(u):
 				macro @:pos(e.pos) {
 					var __ins_ret__ = $u;
-					instrument.Timer.onTimed(__ins_start__, Sys.time());
+					instrument.TimeCalls.onTimed(__ins_start__, Sys.time());
 					throw __ins_ret__;
 				}
 			case _:
