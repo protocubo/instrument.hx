@@ -19,19 +19,21 @@ class TimeCalls {
 
 	public static var unit:Null<{ divisor:Float, symbol:String }> = null;  // default to auto mode
 
+	public static function autoScale(t:Seconds):{ divisor:Float, symbol:String }
+	{
+		// first, find the ideal divisor
+		var d = t != 0 ? 1/t : 1e6;
+		// then, find the best match
+		var u = Lambda.find(auto, function (i) return i.divisor >= d);
+		if (u == null)
+			u = auto[auto.length - 1];
+		return u;
+	}
+
 	public static dynamic function onTimed(start:Seconds, finish:Seconds, ?pos:haxe.PosInfos)
 	{
 		var t = finish  - start;
-		var u = unit;
-		if (u == null) {
-			// auto mode
-			// first, find the ideal divisor
-			var d = t != 0 ? 1/t : 1e6;
-			// then, find the best match
-			u = Lambda.find(auto, function (i) return i.divisor >= d);
-			if (u == null)
-				u = auto[auto.length - 1];
-		}
+		var u = unit != null ? unit : autoScale(t);
 		haxe.Log.trace('TIME ${Math.round(t*u.divisor)}${u.symbol} on ${pos.className}.${pos.methodName}', pos);
 	}
 

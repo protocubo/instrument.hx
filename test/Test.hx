@@ -82,6 +82,20 @@ class Test {
 		Assert.isTrue(times[times.length - 3].time >= times[3].time*100/2);
 	}
 
+	public function test_003_time_auto_scale()
+	{
+		Assert.equals("min", instrument.TimeCalls.autoScale(60).symbol);  // unstable: trigger for min
+		Assert.equals("s", instrument.TimeCalls.autoScale(59.99).symbol);
+		Assert.equals("s", instrument.TimeCalls.autoScale(1).symbol);
+		Assert.equals("ms", instrument.TimeCalls.autoScale(0.999).symbol);
+		Assert.equals("ms", instrument.TimeCalls.autoScale(0.001).symbol);
+		Assert.equals("μs", instrument.TimeCalls.autoScale(0.000999).symbol);
+		Assert.equals("μs", instrument.TimeCalls.autoScale(0.000001).symbol);
+		Assert.equals("ns", instrument.TimeCalls.autoScale(0.000000999).symbol);
+		Assert.equals("ns", instrument.TimeCalls.autoScale(0.000000001).symbol);
+		Assert.equals("ns", instrument.TimeCalls.autoScale(0.000000000001).symbol);  // unstable: inexistance of p[ico]
+	}
+
 	static function main()
 	{
 		var r = new utest.Runner();
