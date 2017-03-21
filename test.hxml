@@ -1,0 +1,10 @@
+--interp
+-main Test
+-cp test
+-cp lib
+-lib utest
+--macro instrument.Htrace.hijack("Std", "int")
+--macro instrument.Timer.hijack("Sys", "systemName")
+#--macro instrument.Instrument.hijack("Std", "int", "var __start__ = Sys.time()", "trace((Sys.time()-__start__)*1e6 + 'us')")
+#--macro instrument.Instrument.hijack("Sys", "systemName", "var __start__ = Sys.time()", "trace((Sys.time()-__start__)*1e6 + 'us')")
+
