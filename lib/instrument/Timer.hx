@@ -16,11 +16,17 @@ class Timer {
 	{
 		return
 			switch e.expr {
-			case EReturn(_), EThrow(_):
+			case EReturn(u):
 				macro @:pos(e.pos) {
-					// FIXME compute the return/throw value first
+					var __ins_ret__ = $u;
 					instrument.Timer.notify(__ins_start__, Sys.time());
-					$e;
+					return __ins_ret__;
+				}
+			case EThrow(u):
+				macro @:pos(e.pos) {
+					var __ins_ret__ = $u;
+					instrument.Timer.notify(__ins_start__, Sys.time());
+					throw __ins_ret__;
 				}
 			case _:
 				e.map(embedExit);
