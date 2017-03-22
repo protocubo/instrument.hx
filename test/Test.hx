@@ -3,6 +3,7 @@ import utest.Assert;
 class Test {
 	var onCalledCopy:?haxe.PosInfos->Void;
 	var onTimedCopy:Float->Float->?haxe.PosInfos->Void;
+	var onCalled2Copy:Array<{ name:String, value:Dynamic }>->?haxe.PosInfos->Void;
 
 	function new() {}
 
@@ -10,6 +11,7 @@ class Test {
 	{
 		onCalledCopy = instrument.TraceCalls.onCalled;
 		onTimedCopy = instrument.TimeCalls.onTimed;
+		onCalled2Copy = instrument.TraceArgs.onCalled;
 		instrument.TraceCalls.onCalled =
 			function (?pos:haxe.PosInfos)
 			{
@@ -22,12 +24,19 @@ class Test {
 				if (pos.className != "SomeLocks")
 					onTimedCopy(st, fi, pos);
 			}
+		instrument.TraceArgs.onCalled =
+			function (args, ?pos:haxe.PosInfos)
+			{
+				if (pos.className != "SomeLocks")
+					onCalled2Copy(args, pos);
+			}
 	}
 
 	public function teardown()
 	{
 		instrument.TraceCalls.onCalled = onCalledCopy;
 		instrument.TimeCalls.onTimed = onTimedCopy;
+		instrument.TraceArgs.onCalled = onCalled2Copy;
 	}
 
 	public function test_001_trace_calls()
@@ -94,6 +103,37 @@ class Test {
 		Assert.equals("ns", instrument.TimeCalls.autoScale(0.000000999).symbol);
 		Assert.equals("ns", instrument.TimeCalls.autoScale(0.000000001).symbol);
 		Assert.equals("ns", instrument.TimeCalls.autoScale(0.000000000001).symbol);  // unstable: inexistance of p[ico]
+	}
+
+	public function test_004_trace_call_args()
+	{
+		var calls = [];
+		instrument.TraceArgs.onCalled =
+			function (args, ?pos)
+			{
+				if (pos.className != "SomeLocks") {
+					onCalled2Copy(args, pos);
+				} else {
+					var c = {
+						call:'${pos.className}.${pos.methodName}',
+						args:args.map(function (i) return i.value)
+					};
+					calls.push(c);
+				}
+			}
+
+		var ls = SomeLocks.create(2);
+		ls.releaseAll();
+		ls.acquire(1);
+
+		Assert.same( [
+				{ call:"SomeLocks.create", args:[2] },
+				{ call:"SomeLocks.new", args:[2] },
+				{ call:"SomeLocks.releaseAll", args:[] },
+				{ call:"SomeLocks.release", args:[0] },
+				{ call:"SomeLocks.release", args:[1] },
+				{ call:"SomeLocks.acquire", args:[1] }
+			], calls);
 	}
 
 	static function main()

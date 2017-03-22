@@ -8,5 +8,6 @@
 --macro instrument.TimeCalls.hijack("Test")
 --macro instrument.TraceCalls.hijack("SomeLocks")
 --macro instrument.TimeCalls.hijack("SomeLocks")
+--macro instrument.TraceArgs.hijack("SomeLocks")
 -cmd neko test.n
 
