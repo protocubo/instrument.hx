@@ -1,0 +1,9 @@
+-neko complete.n
+-main Complete
+-lib instrument
+--macro instrument.TimeCalls.hijack("haxe.Json", "parse")
+--macro instrument.TraceCalls.hijack("haxe.Json")
+--macro instrument.TraceArgs.hijack("Std", "parseFloat")
+--macro instrument.TraceArgs.hijack("Std", "int")
+-D dump=pretty
+

@@ -28,6 +28,8 @@ class TraceArgs {
 	@:allow(instrument.Instrument)
 	static function embed(field:Field, fun:Function):Function
 	{
+		if (fun.expr == null)
+			return fun;
 		var dict = new Map();
 		var i = 0;
 		var block = fun.args.map(

@@ -70,6 +70,8 @@ class TimeCalls {
 	@:allow(instrument.Instrument)
 	static function embed(field:Field, fun:Function):Function
 	{
+		if (fun.expr == null)
+			return fun;
 		var body = embedExit(fun.expr);
 		fun.expr = macro @:pos(field.pos) {
 			var __ins_start__ = Sys.time();

@@ -13,6 +13,8 @@ class TraceCalls {
 	@:allow(instrument.Instrument)
 	static function embed(field:Field, fun:Function):Function
 	{
+		if (fun.expr == null)
+			return fun;
 		fun.expr = macro @:pos(field.pos) {
 			@:pos(fun.expr.pos) instrument.TraceCalls.onCalled();
 			${fun.expr};
