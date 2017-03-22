@@ -4,9 +4,18 @@
 -cp lib
 -lib utest
 -D dump=pretty
+# why not
 --macro instrument.TimeCalls.hijack("Test")
+# tests with the SomeLocks
 --macro instrument.TraceCalls.hijack("SomeLocks")
 --macro instrument.TimeCalls.hijack("SomeLocks")
 --macro instrument.TraceArgs.hijack("SomeLocks")
+# tests with sub types
+--macro instrument.TraceCalls.hijack("SubType")
+--macro instrument.TraceCalls.hijack("PrivSubType")
+# SQLite tests
+--macro instrument.TimeCalls.hijack("sys.db.Sqlite", "open")
+--macro instrument.TimeCalls.hijack("sys.db.SqliteConnection", "request")
+--macro instrument.TimeCalls.hijack("sys.db.SqliteConnection", "close")
 -cmd neko test.n
 

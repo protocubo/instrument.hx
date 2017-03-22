@@ -45,7 +45,7 @@ class Test {
 		instrument.TraceCalls.onCalled =
 			function (?pos)
 			{
-				if (pos.className != "SomeLocks")
+				if (pos.className != "SomeLocks" && pos.className.indexOf("SubType") > 0)
 					onCalledCopy(pos);
 				else
 					calls.push('${pos.className}.${pos.methodName}');
@@ -56,12 +56,16 @@ class Test {
 		ls.release(2);
 		ls.acquire(2);
 
+		SomeLocks.SubType.foo();
+
 		Assert.same( [
 				"SomeLocks.create",
 				"SomeLocks.new",
 				"SomeLocks.acquire",
 				"SomeLocks.release",
-				"SomeLocks.acquire"
+				"SomeLocks.acquire",
+				"SubType.foo",
+				"PrivType.bar"
 			], calls);
 	}
 
@@ -133,6 +137,29 @@ class Test {
 				{ call:"SomeLocks.release", args:[0] },
 				{ call:"SomeLocks.release", args:[1] },
 				{ call:"SomeLocks.acquire", args:[1] }
+			], calls);
+	}
+
+	public function test_005_sqlite()
+	{
+		var calls = [];
+		instrument.TimeCalls.onTimed =
+			function (start, finish, ?pos)
+			{
+				if (pos.className.indexOf("Sqlite") < 0)
+					onTimedCopy(start, finish, pos);
+				else
+					calls.push('${pos.className}.${pos.methodName}');
+			}
+
+		var cnx = sys.db.Sqlite.open(":memory:");
+		cnx.request("SELECT 1");
+		cnx.close();
+
+		Assert.same( [
+				"sys.db.Sqlite.open",
+				"sys.db.SqliteConnection.request",
+				"sys.db.SqliteConnection.close"
 			], calls);
 	}
 

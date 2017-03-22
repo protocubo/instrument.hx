@@ -1,3 +1,12 @@
+private class PrivSubType {
+	public static function bar() {}
+}
+
+class SubType {
+	public static function foo()
+		PrivSubType.bar();
+}
+
 class SomeLocks {
 	var ls:Array<Int>;
 	var size:Int;
