@@ -22,7 +22,7 @@ class TimeCalls {
 	public static function autoScale(t:Seconds):{ divisor:Float, symbol:String }
 	{
 		// first, find the ideal divisor
-		var d = t != 0 ? 1/t : 1e6;
+		var d = t != 0 ? 1/t : Math.POSITIVE_INFINITY;
 		// then, find the best match
 		var u = Lambda.find(auto, function (i) return i.divisor >= d);
 		if (u == null)
