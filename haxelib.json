@@ -1,0 +1,14 @@
+{
+  "name"         :  "instrument",
+  "url"          :  "https://github.com/protocubo/instrument.hx",
+  "license"      :  "BSD",
+  "tags"         :  ["cross", "macro"],
+  "description"  :  "Instrumentation micro framework",
+  "version"      :  "1.0.0",
+  "classPath"    :  "lib",
+  "releasenote"  :  "Implement generic instrumentation and trace/time calls helpers",
+  "contributors" :  ["jonasmalacofilho", "protocubo"],
+  "dependencies" :  {
+  }
+}
+
