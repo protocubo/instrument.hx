@@ -52,6 +52,8 @@ Both `notify` functions are `dynamic` and can be replaced at runtime.
 
 ## Timing calls
 
+_TODO lacking documentation_
+
 ```
 $ ./timing_example
 TIME 102μs on haxe.Json.parse
