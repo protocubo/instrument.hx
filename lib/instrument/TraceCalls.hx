@@ -4,17 +4,7 @@ import haxe.macro.Expr;
 
 class TraceCalls {
 	public static dynamic function onCalled(?pos:haxe.PosInfos)
-	{
-#if instrument_no_default
-#else
-		var msg = 'CALL ${pos.className}.${pos.methodName}';
-#if instrument_stderr_default
-		Sys.stderr().writeString(msg + "\n");
-#else
-		haxe.Log.trace(msg, pos);
-#end
-#end
-	}
+		DefaultOutput.trace('CALL ${pos.className}.${pos.methodName}', pos);
 
 #if macro
 	public static function hijack(type:String, ?field:String)

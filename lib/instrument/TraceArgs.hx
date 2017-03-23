@@ -6,15 +6,9 @@ using haxe.macro.ExprTools;
 class TraceArgs {
 	public static dynamic function onCalled(args:Array<{ name:String, value:Dynamic }>, ?pos:haxe.PosInfos)
 	{
-#if instrument_no_default
-#else
+#if !instrument_no_default
 		var targs = args.map(function (i) return '${i.name}=<${i.value}>');
-		var msg = 'CALL ${pos.className}.${pos.methodName}(${targs.join(", ")})';
-#if instrument_stderr_default
-		Sys.stderr().writeString(msg + "\n");
-#else
-		haxe.Log.trace(msg, pos);
-#end
+		DefaultOutput.trace('CALL ${pos.className}.${pos.methodName}(${targs.join(", ")})', pos);
 #end
 	}
 
