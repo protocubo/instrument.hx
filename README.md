@@ -3,7 +3,7 @@
 ## A complete example
 
 ```haxe
-# Basic.hx
+// Basic.hx
 class Basic {
 	public static function main()
 	{
@@ -60,7 +60,7 @@ TIME 102μs on haxe.Json.parse
 ## Customizing the callbacks: tracing call stacks
 
 ```haxe
-# CallStacks.hx
+// CallStacks.hx
 import instrument.Tools.defaultTrace in itrace;
 
 class CallStacks {
