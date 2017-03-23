@@ -6,8 +6,8 @@ Calls and arguments can be traced easily.  With the default notifiers, the outpu
 
 ```
 $ ./calls_and_args_example
-Json.hx:43: CALL haxe.Json.parse
-Std.hx:53: CALL Std.parseFloat(x=<33.3>)
+CALL haxe.Json.parse
+CALL Std.parseFloat(x=<33.3>)
 ```
 
 First, for simple call tracing, it's enough to use `instrument.TraceCalls.hijack(<class name>, ?<method name>)`.
@@ -22,25 +22,25 @@ Both `notify` functions are `dynamic` and can be replaced at runtime.
 
 ```
 $ ./timing_example
-Json.hx:44: TIME 81μs on haxe.Json.parse
+TIME 102μs on haxe.Json.parse
 ```
 
 ## A complete example
 
-```
-# Complete.hx
-class Complete {
-	static function main()
+```haxe
+# Basic.hx
+class Basic {
+	public static function main()
 	{
 		trace(haxe.Json.parse('{ "value" : 33.3 }'));
 	}
 }
 ```
 
-```
-# complete.hxml
--neko complete.n
--main Complete
+```hxml
+# basic.hxml
+-neko basic.n
+-main Basic
 -lib instrument
 --macro instrument.TimeCalls.hijack("haxe.Json", "parse")
 --macro instrument.TraceCalls.hijack("haxe.Json")
@@ -50,17 +50,75 @@ class Complete {
 ```
 
 ```
-$ haxe complete.hxml
-/home/jonas/Code/instrument.hx/lib/instrument/Instrument.hx:26: characters 71-73 : Warning : Removing AInline access from haxe.Json.parse
+$ neko basic.n
+CALL haxe.Json.parse
+CALL Std.parseFloat(x=<33.3>)
+CALL Std.int(x=<33.3>)
+TIME 102μs on haxe.Json.parse
+Basic.hx:4: { value => 33.3 }
+```
+
+## Customizing the callbacks: tracing call stacks
+
+```haxe
+# CallStacks.hx
+import instrument.Tools.defaultTrace in itrace;
+
+class CallStacks {
+	static function onCalled(?pos:haxe.PosInfos)
+	{
+		itrace('CALL ${pos.className}.${pos.methodName}', pos);
+		if (pos.className == "Std") {
+			/*
+			trace the call stack as well
+
+			for this, use haxe.CallStack.callStack, but:
+			 - remove the calls to this and the instrumented functions
+			 - limit the number of call stack items traced
+			*/
+			var cs = haxe.CallStack.callStack();
+			var pcs = cs.slice(2, 4);
+			for (i in haxe.CallStack.toString(pcs).split("\n")) {
+				if (StringTools.trim(i) != "")
+					itrace(' └╴ $i', pos);
+			}
+			var ommited = cs.length - pcs.length - 2;
+			if (ommited > 0)
+				itrace('    [$ommited ommited]', pos);
+		}
+	}
+
+	public static function main()
+	{
+		instrument.TraceCalls.onCalled = onCalled;
+		Basic.main();
+	}
+}
+```
+
+```hxml
+# call_stacks.hxml
+-neko call_stacks.n
+-main CallStacks
+-lib instrument
+--macro instrument.TraceCalls.hijack("haxe.Json", "parse")
+--macro instrument.TraceCalls.hijack("Std")
+-D dump=pretty
 ```
 
 ```
-$ neko complete.n
-Json.hx:43: CALL haxe.Json.parse
-Std.hx:53: CALL Std.parseFloat(x=<33.3>)
-Std.hx:37: CALL Std.int(x=<33.3>)
-Json.hx:44: TIME 81μs on haxe.Json.parse
-Complete.hx:4: { value => 33.3 }
+$ neko call_stacks.n
+CALL Std.__init__
+CALL haxe.Json.parse
+CALL Std.parseFloat
+ └╴ Called from /usr/lib/haxe/std/haxe/format/JsonParser.hx line 131
+ └╴ Called from /usr/lib/haxe/std/haxe/format/JsonParser.hx line 76
+    [4 ommited]
+CALL Std.int
+ └╴ Called from /usr/lib/haxe/std/haxe/format/JsonParser.hx line 131
+ └╴ Called from /usr/lib/haxe/std/haxe/format/JsonParser.hx line 76
+    [4 ommited]
+Basic.hx:4: { value => 33.3 }
 ```
 
 ## Advanced instrumentation
