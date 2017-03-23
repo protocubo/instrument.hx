@@ -1,8 +1,9 @@
 libname=instrument
 zipname=${libname}.zip
 
-noop:
-	# Check the available Makefile targets
+test:
+	haxe test.hxml
+	for i in basic call_stacks; do (echo example: $$i && cd examples && haxe $$i.hxml && neko $$i.n); done
 
 ${zipname}:
 	rm -f ${zipname}
@@ -24,5 +25,5 @@ set-live:
 	haxelib install ${libname}
 	haxelib path ${libname}
 
-.PHONY: ${zipname} set-pkg set-dev set-live
+.PHONY: test ${zipname} set-pkg set-dev set-live
 
