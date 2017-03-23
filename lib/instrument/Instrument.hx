@@ -14,12 +14,13 @@ class Instrument {
 
 	public static function instrument(id:Int, type:String, ?only:String)
 	{
+		// EXPLORE give more control to the implementation (e.g. change field properties)
 		var embed = methods[id];
 		var fields = Context.getBuildFields();
 		for (f in fields) {
 			if (only != null && f.name != only)
 				continue;
-			// FIXME skip AMacro
+			// FIXME ignore AMacro
 			switch f.kind {
 			case FFun(fun) if (f.access.indexOf(AInline) < 0):
 				f.kind = FFun(embed(f, fun));
@@ -35,6 +36,8 @@ class Instrument {
 		return fields;
 	}
 
+	// EXPLORE use path filters instead of explicit types
+	// EXPLORE allow field filters
 	public static function hijack(embed:Field->Function->Function, type:String, ?field:String)
 	{
 		var id = methods.push(embed) - 1;

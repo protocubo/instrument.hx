@@ -38,6 +38,7 @@ class TimeCalls {
 	}
 
 #if macro
+	// FIXME remove the need for skipFinal?  or, at least, rename it?
 	public static function hijack(type:String, ?field:String, ?skipFinal=false)
 		Instrument.hijack(instrument.TimeCalls.embed.bind(skipFinal), type, field);
 
