@@ -6,7 +6,17 @@ using haxe.macro.ExprTools;
 typedef Seconds = Float;
 
 class TimeCalls {
-	static var auto = [
+	static var auto:Array<{ divisor:Float, symbol:String }>;
+	
+	/*
+	Make `auto` available as soon as possible
+
+	Make sures it's already available if we're timing other `__init__`
+	functions.
+	*/
+	static function __init__()
+	{
+		auto = [
 			// divisor := 1/factor
 			// keep sorted
 			{ divisor:1/3600, symbol:"hour" },
@@ -16,6 +26,7 @@ class TimeCalls {
 			{ divisor:1e6, symbol:"μs" },
 			{ divisor:1e9, symbol:"ns" }
 		];
+	}
 
 	public static var unit:Null<{ divisor:Float, symbol:String }> = null;  // default to auto mode
 
