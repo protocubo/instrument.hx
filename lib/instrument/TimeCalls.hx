@@ -43,9 +43,17 @@ class TimeCalls {
 
 	public static dynamic function onTimed(start:Seconds, finish:Seconds, ?pos:haxe.PosInfos)
 	{
+#if instrument_no_default
+#else
 		var t = finish  - start;
 		var u = unit != null ? unit : autoScale(t);
-		haxe.Log.trace('TIME ${Math.round(t*u.divisor)}${u.symbol} on ${pos.className}.${pos.methodName}', pos);
+		var msg = 'TIME ${Math.round(t*u.divisor)}${u.symbol} on ${pos.className}.${pos.methodName}';
+#if instrument_stderr_default
+		Sys.stderr().writeString(msg + "\n");
+#else
+		haxe.Log.trace(msg, pos);
+#end
+#end
 	}
 
 #if macro
