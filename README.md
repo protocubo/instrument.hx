@@ -1,30 +1,5 @@
 # Instrumentation micro framework
 
-## Tracing calls and arguments
-
-Calls and arguments can be traced easily.  With the default notifiers, the output will look something like:
-
-```
-$ ./calls_and_args_example
-CALL haxe.Json.parse
-CALL Std.parseFloat(x=<33.3>)
-```
-
-First, for simple call tracing, it's enough to use `instrument.TraceCalls.hijack(<class name>, ?<method name>)`.
-This will adapt the desired methods to call `instrument.TraceCalls.notify` at their beginning.
-
-If, on the other hand, inspection of the arguments is desired, `TraceCalls` should be replaced by `TraceArgs`.
-This will instead call its own `notify` function with an extra `args:Array<{ name:String, value:Dynamic }>` array.
-
-Both `notify` functions are `dynamic` and can be replaced at runtime.
-
-## Timing calls
-
-```
-$ ./timing_example
-TIME 102μs on haxe.Json.parse
-```
-
 ## A complete example
 
 ```haxe
@@ -55,6 +30,31 @@ CALL Std.parseFloat(x=<33.3>)
 CALL Std.int(x=<33.3>)
 TIME 102μs on haxe.Json.parse
 Basic.hx:4: { value => 33.3 }
+```
+
+## Tracing calls and arguments
+
+Calls and arguments can be traced easily.  With the default notifiers, the output will look something like:
+
+```
+$ ./calls_and_args_example
+CALL haxe.Json.parse
+CALL Std.parseFloat(x=<33.3>)
+```
+
+First, for simple call tracing, it's enough to use `instrument.TraceCalls.hijack(<class name>, ?<method name>)`.
+This will adapt the desired methods to call `instrument.TraceCalls.notify` at their beginning.
+
+If, on the other hand, inspection of the arguments is desired, `TraceCalls` should be replaced by `TraceArgs`.
+This will instead call its own `notify` function with an extra `args:Array<{ name:String, value:Dynamic }>` array.
+
+Both `notify` functions are `dynamic` and can be replaced at runtime.
+
+## Timing calls
+
+```
+$ ./timing_example
+TIME 102μs on haxe.Json.parse
 ```
 
 ## Customizing the callbacks: tracing call stacks
