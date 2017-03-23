@@ -15,7 +15,7 @@ class TraceCalls {
 	{
 		if (fun.expr == null)
 			return fun;
-		fun.expr = macro @:pos(field.pos) {
+		fun.expr = macro {
 			@:pos(fun.expr.pos) instrument.TraceCalls.onCalled();
 			${fun.expr};
 		}

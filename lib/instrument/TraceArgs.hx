@@ -54,7 +54,7 @@ class TraceArgs {
 			}
 		);
 		block.push(changeIdents(dict, fun.expr));
-		fun.expr = macro @:pos(field.pos) $b{block};
+		fun.expr = macro $b{block};
 		return fun;
 	}
 #end

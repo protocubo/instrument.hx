@@ -76,15 +76,15 @@ class TimeCalls {
 		if (fun.expr == null)
 			return fun;
 		var body = [
-			macro @:pos(field.pos) var __ins_start__ = Sys.time(),
+			(macro var __ins_start__ = Sys.time()),
 			embedExit(fun.expr)
 		];
 		if (!skipFinal) {
 			body.push(
-				macro @:pos(field.pos) instrument.TimeCalls.onTimed(__ins_start__, Sys.time())
+				macro @:pos(fun.expr.pos) instrument.TimeCalls.onTimed(__ins_start__, Sys.time())
 			);
 		}
-		fun.expr = macro @:pos(field.pos) $b{body};
+		fun.expr = macro $b{body};
 		return fun;
 	}
 #end
