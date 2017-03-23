@@ -1,4 +1,4 @@
-import instrument.DefaultOutput.trace in itrace;
+import instrument.Tools.defaultTrace in itrace;
 
 class CallStacks {
 	static function onCalled(?pos:haxe.PosInfos)

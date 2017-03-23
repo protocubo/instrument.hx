@@ -8,7 +8,7 @@ class TraceArgs {
 	{
 #if !instrument_no_default
 		var targs = args.map(function (i) return '${i.name}=<${i.value}>');
-		DefaultOutput.trace('CALL ${pos.className}.${pos.methodName}(${targs.join(", ")})', pos);
+		Tools.defaultTrace('CALL ${pos.className}.${pos.methodName}(${targs.join(", ")})', pos);
 #end
 	}
 

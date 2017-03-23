@@ -48,7 +48,7 @@ class TimeCalls {
 #if !instrument_no_default
 		var t = finish  - start;
 		var u = unit != null ? unit : autoScale(t);
-		DefaultOutput.trace('TIME ${Math.round(t*u.divisor)}${u.symbol} on ${pos.className}.${pos.methodName}', pos);
+		Tools.defaultTrace('TIME ${Math.round(t*u.divisor)}${u.symbol} on ${pos.className}.${pos.methodName}', pos);
 #end
 	}
 

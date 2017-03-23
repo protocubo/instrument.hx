@@ -1,7 +1,8 @@
 package instrument;
 
-class DefaultOutput {
-	public static inline function trace(msg:String, pos:haxe.PosInfos)
+class Tools {
+	@:noUsing
+	public static inline function defaultTrace(msg:String, pos:haxe.PosInfos)
 	{
 #if instrument_no_default
 #elseif instrument_stderr_default
