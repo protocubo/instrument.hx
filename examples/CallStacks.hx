@@ -24,10 +24,10 @@ class CallStacks {
 		}
 	}
 
-	public static function main()
+	static function main()
 	{
 		instrument.TraceCalls.onCalled = onCalled;
-		Basic.main();
+		trace(haxe.Json.parse('{ "value" : 33.3 }'));
 	}
 }
 

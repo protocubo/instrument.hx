@@ -46,7 +46,6 @@ class Basic {
 --macro instrument.TraceCalls.hijack("haxe.Json")
 --macro instrument.TraceArgs.hijack("Std", "parseFloat")
 --macro instrument.TraceArgs.hijack("Std", "int")
--D dump=pretty
 ```
 
 ```
@@ -88,10 +87,10 @@ class CallStacks {
 		}
 	}
 
-	public static function main()
+	static function main()
 	{
 		instrument.TraceCalls.onCalled = onCalled;
-		Basic.main();
+		trace(haxe.Json.parse('{ "value" : 33.3 }'));
 	}
 }
 ```
@@ -103,7 +102,6 @@ class CallStacks {
 -lib instrument
 --macro instrument.TraceCalls.hijack("haxe.Json", "parse")
 --macro instrument.TraceCalls.hijack("Std")
--D dump=pretty
 ```
 
 ```
@@ -118,7 +116,7 @@ CALL Std.int
  └╴ Called from /usr/lib/haxe/std/haxe/format/JsonParser.hx line 131
  └╴ Called from /usr/lib/haxe/std/haxe/format/JsonParser.hx line 76
     [4 ommited]
-Basic.hx:4: { value => 33.3 }
+CallStacks.hx:30: { value => 33.3 }
 ```
 
 ## Advanced instrumentation
