@@ -1,5 +1,5 @@
--neko complete.n
--main Complete
+-neko basic.n
+-main Basic
 -lib instrument
 --macro instrument.TimeCalls.hijack("haxe.Json", "parse")
 --macro instrument.TraceCalls.hijack("haxe.Json")

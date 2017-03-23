@@ -1,0 +1,7 @@
+-neko call_stacks.n
+-main CallStacks
+-lib instrument
+--macro instrument.TraceCalls.hijack("haxe.Json", "parse")
+--macro instrument.TraceCalls.hijack("Std")
+-D dump=pretty
+
