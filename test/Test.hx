@@ -1,17 +1,14 @@
 import utest.Assert;
 
 class Test {
-	var onCalledCopy:?haxe.PosInfos->Void;
-	var onTimedCopy:Float->Float->?haxe.PosInfos->Void;
-	var onCalled2Copy:Array<{ name:String, value:Dynamic }>->?haxe.PosInfos->Void;
+	var onCalledCopy = instrument.TraceCalls.onCalled;
+	var onTimedCopy = instrument.TimeCalls.onTimed;
+	var onCalled2Copy = instrument.TraceArgs.onCalled;
 
 	function new() {}
 
 	public function setup()
 	{
-		onCalledCopy = instrument.TraceCalls.onCalled;
-		onTimedCopy = instrument.TimeCalls.onTimed;
-		onCalled2Copy = instrument.TraceArgs.onCalled;
 		instrument.TraceCalls.onCalled =
 			function (?pos:haxe.PosInfos)
 			{
