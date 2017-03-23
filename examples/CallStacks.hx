@@ -5,12 +5,22 @@ class CallStacks {
 	{
 		itrace('CALL ${pos.className}.${pos.methodName}', pos);
 		if (pos.className == "Std") {
+			/*
+			trace the call stack as well
+
+			for this, use haxe.CallStack.callStack, but:
+			 - remove the calls to this and the instrumented functions
+			 - limit the number of call stack items traced
+			*/
 			var cs = haxe.CallStack.callStack();
-			var pcs = cs.slice(2,4);  // remove onCalled and targeted calls
-			for (i in StringTools.trim(haxe.CallStack.toString(pcs)).split("\n"))
-				itrace(' └╴ $i', pos);
-			if (cs.length - 1 > pcs.length)
-				itrace('    [${cs.length - pcs.length -1} ommited]', pos);
+			var pcs = cs.slice(2, 4);
+			for (i in haxe.CallStack.toString(pcs).split("\n")) {
+				if (StringTools.trim(i) != "")
+					itrace(' └╴ $i', pos);
+			}
+			var ommited = cs.length - pcs.length - 2;
+			if (ommited > 0)
+				itrace('    [$ommited ommited]', pos);
 		}
 	}
 
