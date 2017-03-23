@@ -45,7 +45,7 @@ class Test {
 		instrument.TraceCalls.onCalled =
 			function (?pos)
 			{
-				if (pos.className != "SomeLocks" && pos.className.indexOf("SubType") > 0)
+				if (pos.className != "SomeLocks" && pos.className.indexOf("SubType") < 0)
 					onCalledCopy(pos);
 				else
 					calls.push('${pos.className}.${pos.methodName}');
@@ -65,7 +65,7 @@ class Test {
 				"SomeLocks.release",
 				"SomeLocks.acquire",
 				"SubType.foo",
-				"PrivType.bar"
+				"_SomeLocks.PrivSubType.bar"
 			], calls);
 	}
 
@@ -158,8 +158,8 @@ class Test {
 
 		Assert.same( [
 				"sys.db.Sqlite.open",
-				"sys.db.SqliteConnection.request",
-				"sys.db.SqliteConnection.close"
+				"sys.db._Sqlite.SqliteConnection.request",
+				"sys.db._Sqlite.SqliteConnection.close"
 			], calls);
 	}
 

@@ -38,8 +38,8 @@ class TimeCalls {
 	}
 
 #if macro
-	public static function hijack(type:String, ?field:String)
-		Instrument.hijack(instrument.TimeCalls.embed, type, field);
+	public static function hijack(type:String, ?field:String, ?skipFinal=false)
+		Instrument.hijack(instrument.TimeCalls.embed.bind(skipFinal), type, field);
 
 	static function embedExit(e:Expr):Expr
 	{
@@ -62,22 +62,28 @@ class TimeCalls {
 					@:pos(e.pos) instrument.TimeCalls.onTimed(__ins_start__, Sys.time());
 					throw __ins_ret__;
 				}
+			case EFunction(_):
+				e;
 			case _:
 				e.map(embedExit);
 			}
 	}
 
 	@:allow(instrument.Instrument)
-	static function embed(field:Field, fun:Function):Function
+	static function embed(skipFinal:Bool, field:Field, fun:Function):Function
 	{
 		if (fun.expr == null)
 			return fun;
-		var body = embedExit(fun.expr);
-		fun.expr = macro @:pos(field.pos) {
-			var __ins_start__ = Sys.time();
-			$body;
-			instrument.TimeCalls.onTimed(__ins_start__, Sys.time());
+		var body = [
+			macro @:pos(field.pos) var __ins_start__ = Sys.time(),
+			embedExit(fun.expr)
+		];
+		if (!skipFinal) {
+			body.push(
+				macro @:pos(field.pos) instrument.TimeCalls.onTimed(__ins_start__, Sys.time())
+			);
 		}
+		fun.expr = macro @:pos(field.pos) $b{body};
 		return fun;
 	}
 #end

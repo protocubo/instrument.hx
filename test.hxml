@@ -11,11 +11,11 @@
 --macro instrument.TimeCalls.hijack("SomeLocks")
 --macro instrument.TraceArgs.hijack("SomeLocks")
 # tests with sub types
---macro instrument.TraceCalls.hijack("SubType")
---macro instrument.TraceCalls.hijack("PrivSubType")
+--macro instrument.TraceCalls.hijack("SomeLocks.SubType")
+--macro instrument.TraceCalls.hijack("SomeLocks.PrivSubType")
 # SQLite tests
 --macro instrument.TimeCalls.hijack("sys.db.Sqlite", "open")
---macro instrument.TimeCalls.hijack("sys.db.SqliteConnection", "request")
---macro instrument.TimeCalls.hijack("sys.db.SqliteConnection", "close")
+--macro instrument.TimeCalls.hijack("sys.db.Sqlite.SqliteConnection", "request", true)
+--macro instrument.TimeCalls.hijack("sys.db.Sqlite.SqliteConnection", "close")
 -cmd neko test.n
 

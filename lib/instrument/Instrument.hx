@@ -19,6 +19,7 @@ class Instrument {
 		for (f in fields) {
 			if (only != null && f.name != only)
 				continue;
+			// FIXME skip AMacro
 			switch f.kind {
 			case FFun(fun) if (f.access.indexOf(AInline) < 0):
 				f.kind = FFun(embed(f, fun));
@@ -40,7 +41,7 @@ class Instrument {
 		var bcall = macro instrument.Instrument.instrument($v{id}, $v{type}, $v{field});
 		// FIXME register dependencies with the compilation cache
 		// FIXME gracefully fail on macro, @:build, and @:genericBuild
-		Compiler.addMetadata('@:build(${bcall.toString()})', type);
+		Compiler.addGlobalMetadata(type, '@:build(${bcall.toString()})', false, true);
 	}
 #end
 }
