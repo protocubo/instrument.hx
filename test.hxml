@@ -1,7 +1,7 @@
 -neko test.n
 -main Test
 -cp test
--cp lib
+-lib instrument
 -lib utest
 -D dump=pretty
 # why not
