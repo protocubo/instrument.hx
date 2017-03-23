@@ -18,17 +18,20 @@ class Basic {
 -main Basic
 -lib instrument
 --macro instrument.TimeCalls.hijack("haxe.Json", "parse")
---macro instrument.TraceCalls.hijack("haxe.Json")
+--macro instrument.TraceCalls.hijack("haxe.format.JsonParser")
 --macro instrument.TraceArgs.hijack("Std", "parseFloat")
 --macro instrument.TraceArgs.hijack("Std", "int")
 ```
 
 ```
 $ neko basic.n
-CALL haxe.Json.parse
+CALL haxe.format.JsonParser.new
+CALL haxe.format.JsonParser.parseRec
+CALL haxe.format.JsonParser.parseString
+CALL haxe.format.JsonParser.parseRec
 CALL Std.parseFloat(x=<33.3>)
 CALL Std.int(x=<33.3>)
-TIME 102μs on haxe.Json.parse
+TIME 186μs on haxe.Json.parse
 Basic.hx:4: { value => 33.3 }
 ```
 
@@ -102,22 +105,25 @@ class CallStacks {
 -neko call_stacks.n
 -main CallStacks
 -lib instrument
---macro instrument.TraceCalls.hijack("haxe.Json", "parse")
+--macro instrument.TraceCalls.hijack("haxe.format.JsonParser")
 --macro instrument.TraceCalls.hijack("Std")
 ```
 
 ```
 $ neko call_stacks.n
 CALL Std.__init__
-CALL haxe.Json.parse
+CALL haxe.format.JsonParser.new
+CALL haxe.format.JsonParser.parseRec
+CALL haxe.format.JsonParser.parseString
+CALL haxe.format.JsonParser.parseRec
 CALL Std.parseFloat
  └╴ Called from /usr/lib/haxe/std/haxe/format/JsonParser.hx line 131
  └╴ Called from /usr/lib/haxe/std/haxe/format/JsonParser.hx line 76
-    [4 ommited]
+    [2 ommited]
 CALL Std.int
  └╴ Called from /usr/lib/haxe/std/haxe/format/JsonParser.hx line 131
  └╴ Called from /usr/lib/haxe/std/haxe/format/JsonParser.hx line 76
-    [4 ommited]
+    [2 ommited]
 CallStacks.hx:30: { value => 33.3 }
 ```
 
