@@ -9,29 +9,31 @@ class TimeCalls {
 	static var auto:Array<{ divisor:Float, symbol:String }>;
 	
 	/*
-	Make `auto` available as soon as possible
+	Make sure `auto` is available.
 
-	Make sures it's already available if we're timing other `__init__`
-	functions.
+	Only initializes `auto` once.
 	*/
-	static function __init__()
+	static inline function initAuto()
 	{
-		auto = [
-			// divisor := 1/factor
-			// keep sorted
-			{ divisor:1/3600, symbol:"hour" },
-			{ divisor:1/60, symbol:"min" },
-			{ divisor:1, symbol:"s" },
-			{ divisor:1e3, symbol:"ms" },
-			{ divisor:1e6, symbol:"μs" },
-			{ divisor:1e9, symbol:"ns" }
-		];
+		if (auto == null) {
+			auto = [
+				// divisor := 1/factor
+				// keep sorted
+				{ divisor:1/3600, symbol:"hour" },
+				{ divisor:1/60, symbol:"min" },
+				{ divisor:1, symbol:"s" },
+				{ divisor:1e3, symbol:"ms" },
+				{ divisor:1e6, symbol:"μs" },
+				{ divisor:1e9, symbol:"ns" }
+			];
+		}
 	}
 
 	public static var unit:Null<{ divisor:Float, symbol:String }> = null;  // default to auto mode
 
 	public static function autoScale(t:Seconds):{ divisor:Float, symbol:String }
 	{
+		initAuto();
 		// first, find the ideal divisor
 		var d = t != 0 ? 1/t : Math.POSITIVE_INFINITY;
 		// then, find the best match
