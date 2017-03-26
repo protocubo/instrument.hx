@@ -10,7 +10,7 @@ class Tools {
 #elseif instrument_trace_default
 		haxe.Log.trace(msg, pos);
 #elseif js
-		console.log(msg);
+		js.Browser.console.log(msg);
 #elseif sys
 		Sys.stderr().writeString(msg + "\n");
 #else
