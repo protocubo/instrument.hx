@@ -34,13 +34,25 @@ class TimeCalls {
 	public static function autoScale(t:Seconds):{ divisor:Float, symbol:String }
 	{
 		initAuto();
-		// first, find the ideal divisor
+		// find the ideal divisor
 		var d = t != 0 ? 1/t : Math.POSITIVE_INFINITY;
-		// then, find the best match
-		var u = Lambda.find(auto, function (i) return i.divisor >= d);
-		if (u == null)
-			u = auto[auto.length - 1];
-		return u;
+		// find the best among the available divisors (default to largest)
+		var best = auto.length - 1;
+		for (i in 0...best) {
+			if (auto[i].divisor >= d) {
+				best = i;
+				break;
+			}
+		}
+		// check if a smaller divisor isn't just as good, after Math.round
+		if (best > 0) {
+			var exp = Math.round(t*auto[best].divisor);
+			var alt = t*auto[best - 1].divisor;
+			var expToAlt = exp/auto[best].divisor*auto[best - 1].divisor;
+			if (exp > 0 && expToAlt > alt)
+				best--;
+		}
+		return auto[best];
 	}
 
 	public static dynamic function onTimed(start:Seconds, finish:Seconds, ?pos:haxe.PosInfos)

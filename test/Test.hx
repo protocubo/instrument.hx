@@ -94,8 +94,9 @@ class Test {
 
 	public function test_003_time_auto_scale()
 	{
+		// all available divisors
 		Assert.equals("min", instrument.TimeCalls.autoScale(60).symbol);  // unstable: trigger for min
-		Assert.equals("s", instrument.TimeCalls.autoScale(59.99).symbol);
+		Assert.equals("s", instrument.TimeCalls.autoScale(59).symbol);
 		Assert.equals("s", instrument.TimeCalls.autoScale(1).symbol);
 		Assert.equals("ms", instrument.TimeCalls.autoScale(0.999).symbol);
 		Assert.equals("ms", instrument.TimeCalls.autoScale(0.001).symbol);
@@ -104,6 +105,12 @@ class Test {
 		Assert.equals("ns", instrument.TimeCalls.autoScale(0.000000999).symbol);
 		Assert.equals("ns", instrument.TimeCalls.autoScale(0.000000001).symbol);
 		Assert.equals("ns", instrument.TimeCalls.autoScale(0.000000000001).symbol);  // unstable: inexistance of p[ico]
+
+		// best results considering use case is Math.round(t*divisor)
+		Assert.equals("s", instrument.TimeCalls.autoScale(59.4).symbol);  // unstable: trigger for min
+		Assert.equals("min", instrument.TimeCalls.autoScale(59.6).symbol);  // unstable: trigger for min
+		Assert.equals("μs", instrument.TimeCalls.autoScale(0.0009994).symbol);
+		Assert.equals("ms", instrument.TimeCalls.autoScale(0.0009996).symbol);
 	}
 
 	public function test_004_trace_call_args()
