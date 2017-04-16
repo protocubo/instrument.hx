@@ -47,9 +47,9 @@ class TimeCalls {
 		// check if a smaller divisor isn't just as good, after Math.round
 		if (best > 0) {
 			var exp = Math.round(t*auto[best].divisor);
-			var alt = t*auto[best - 1].divisor;
-			var expToAlt = exp/auto[best].divisor*auto[best - 1].divisor;
-			if (exp > 0 && expToAlt > alt)
+			var alt = Math.round(t*auto[best - 1].divisor);
+			var expToAlt = Std.int(exp/auto[best].divisor*auto[best - 1].divisor);
+			if (alt > 0 && alt == expToAlt)
 				best--;
 		}
 		return auto[best];

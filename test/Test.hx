@@ -111,6 +111,9 @@ class Test {
 		Assert.equals("min", instrument.TimeCalls.autoScale(59.6).symbol);  // unstable: trigger for min
 		Assert.equals("μs", instrument.TimeCalls.autoScale(0.0009994).symbol);
 		Assert.equals("ms", instrument.TimeCalls.autoScale(0.0009996).symbol);
+
+		// regression tests
+		Assert.equals("ms", instrument.TimeCalls.autoScale(0.0069).symbol);
 	}
 
 	public function test_004_trace_call_args()
