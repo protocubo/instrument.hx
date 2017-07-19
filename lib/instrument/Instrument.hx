@@ -17,12 +17,13 @@ class Instrument {
 		// EXPLORE give more control to the implementation (e.g. change field properties)
 		var embed = methods[id];
 		var fields = Context.getBuildFields();
+		var noInline = Context.defined("no_inline");
 		for (f in fields) {
 			if (only != null && f.name != only)
 				continue;
 			// FIXME ignore AMacro
 			switch f.kind {
-			case FFun(fun) if (f.access.indexOf(AInline) < 0):
+			case FFun(fun) if (f.access.indexOf(AInline) < 0 || noInline):
 				f.kind = FFun(embed(f, fun));
 			case FFun(fun) if (only != null):
 				Context.warning('Removing AInline access from $type.$only', (macro {}).pos);
