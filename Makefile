@@ -1,4 +1,4 @@
-libname=instrument
+libname=uinstrument
 zipname=${libname}.zip
 
 test:
@@ -26,4 +26,3 @@ set-live:
 	haxelib path ${libname}
 
 .PHONY: test ${zipname} set-pkg set-dev set-live
-

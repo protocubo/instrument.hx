@@ -1,9 +1,8 @@
 -neko basic.n
 -main Basic
--lib instrument
---macro instrument.TimeCalls.hijack("haxe.Json", "parse")
---macro instrument.TraceCalls.hijack("haxe.format.JsonParser")
---macro instrument.TraceArgs.hijack("Std", "parseFloat")
---macro instrument.TraceArgs.hijack("Std", "int")
+-lib uinstrument
+--macro uinstrument.TimeCalls.hijack("haxe.Json", "parse")
+--macro uinstrument.TraceCalls.hijack("haxe.format.JsonParser")
+--macro uinstrument.TraceArgs.hijack("Std", "parseFloat")
+--macro uinstrument.TraceArgs.hijack("Std", "int")
 -D dump=pretty
-

@@ -1,4 +1,4 @@
-package instrument;
+package uinstrument;
 
 import haxe.macro.Type;
 import haxe.macro.Expr;
@@ -42,11 +42,10 @@ class Instrument {
 	public static function hijack(embed:Field->Function->Function, type:String, ?field:String)
 	{
 		var id = methods.push(embed) - 1;
-		var bcall = macro instrument.Instrument.instrument($v{id}, $v{type}, $v{field});
+		var bcall = macro uinstrument.Instrument.instrument($v{id}, $v{type}, $v{field});
 		// FIXME register dependencies with the compilation cache
 		// FIXME gracefully fail on macro, @:build, and @:genericBuild
 		Compiler.addGlobalMetadata(type, '@:build(${bcall.toString()})', false, true);
 	}
 #end
 }
-

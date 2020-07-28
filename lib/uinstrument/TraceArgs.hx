@@ -1,4 +1,4 @@
-package instrument;
+package uinstrument;
 
 import haxe.macro.Expr;
 using haxe.macro.ExprTools;
@@ -14,7 +14,7 @@ class TraceArgs {
 
 #if macro
 	public static function hijack(type:String, ?field:String)
-		Instrument.hijack(instrument.TraceArgs.embed, type, field);
+		Instrument.hijack(uinstrument.TraceArgs.embed, type, field);
 
 	static function changeIdents(dict:Map<String,String>, e:Expr):Expr
 	{
@@ -27,7 +27,7 @@ class TraceArgs {
 			}
 	}
 
-	@:allow(instrument.Instrument)
+	@:allow(uinstrument.Instrument)
 	static function embed(field:Field, fun:Function):Function
 	{
 		if (fun.expr == null)
@@ -52,7 +52,7 @@ class TraceArgs {
 		block.push(macro
 			{
 				var args = $a{sargs};
-				@:pos(fun.expr.pos) instrument.TraceArgs.onCalled(args);
+				@:pos(fun.expr.pos) uinstrument.TraceArgs.onCalled(args);
 			}
 		);
 		block.push(changeIdents(dict, fun.expr));
@@ -61,4 +61,3 @@ class TraceArgs {
 	}
 #end
 }
-

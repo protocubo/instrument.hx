@@ -1,27 +1,27 @@
 import utest.Assert;
 
 class Test {
-	var onCalledCopy = instrument.TraceCalls.onCalled;
-	var onTimedCopy = instrument.TimeCalls.onTimed;
-	var onCalled2Copy = instrument.TraceArgs.onCalled;
+	var onCalledCopy = uinstrument.TraceCalls.onCalled;
+	var onTimedCopy = uinstrument.TimeCalls.onTimed;
+	var onCalled2Copy = uinstrument.TraceArgs.onCalled;
 
 	function new() {}
 
 	public function setup()
 	{
-		instrument.TraceCalls.onCalled =
+		uinstrument.TraceCalls.onCalled =
 			function (?pos:haxe.PosInfos)
 			{
 				if (pos.className != "SomeLocks")
 					onCalledCopy(pos);
 			}
-		instrument.TimeCalls.onTimed =
+		uinstrument.TimeCalls.onTimed =
 			function (st, fi, ?pos:haxe.PosInfos)
 			{
 				if (pos.className != "SomeLocks")
 					onTimedCopy(st, fi, pos);
 			}
-		instrument.TraceArgs.onCalled =
+		uinstrument.TraceArgs.onCalled =
 			function (args, ?pos:haxe.PosInfos)
 			{
 				if (pos.className != "SomeLocks")
@@ -31,15 +31,15 @@ class Test {
 
 	public function teardown()
 	{
-		instrument.TraceCalls.onCalled = onCalledCopy;
-		instrument.TimeCalls.onTimed = onTimedCopy;
-		instrument.TraceArgs.onCalled = onCalled2Copy;
+		uinstrument.TraceCalls.onCalled = onCalledCopy;
+		uinstrument.TimeCalls.onTimed = onTimedCopy;
+		uinstrument.TraceArgs.onCalled = onCalled2Copy;
 	}
 
 	public function test_001_trace_calls()
 	{
 		var calls = [];
-		instrument.TraceCalls.onCalled =
+		uinstrument.TraceCalls.onCalled =
 			function (?pos)
 			{
 				if (pos.className != "SomeLocks" && pos.className.indexOf("SubType") < 0)
@@ -69,7 +69,7 @@ class Test {
 	public function test_002_time_calls()
 	{
 		var times = [];
-		instrument.TimeCalls.onTimed =
+		uinstrument.TimeCalls.onTimed =
 			function (start, finish, ?pos)
 			{
 				if (pos.className != "SomeLocks")
@@ -95,31 +95,31 @@ class Test {
 	public function test_003_time_auto_scale()
 	{
 		// all available divisors
-		Assert.equals("min", instrument.TimeCalls.autoScale(60).symbol);  // unstable: trigger for min
-		Assert.equals("s", instrument.TimeCalls.autoScale(59).symbol);
-		Assert.equals("s", instrument.TimeCalls.autoScale(1).symbol);
-		Assert.equals("ms", instrument.TimeCalls.autoScale(0.999).symbol);
-		Assert.equals("ms", instrument.TimeCalls.autoScale(0.001).symbol);
-		Assert.equals("μs", instrument.TimeCalls.autoScale(0.000999).symbol);
-		Assert.equals("μs", instrument.TimeCalls.autoScale(0.000001).symbol);
-		Assert.equals("ns", instrument.TimeCalls.autoScale(0.000000999).symbol);
-		Assert.equals("ns", instrument.TimeCalls.autoScale(0.000000001).symbol);
-		Assert.equals("ns", instrument.TimeCalls.autoScale(0.000000000001).symbol);  // unstable: inexistance of p[ico]
+		Assert.equals("min", uinstrument.TimeCalls.autoScale(60).symbol);  // unstable: trigger for min
+		Assert.equals("s", uinstrument.TimeCalls.autoScale(59).symbol);
+		Assert.equals("s", uinstrument.TimeCalls.autoScale(1).symbol);
+		Assert.equals("ms", uinstrument.TimeCalls.autoScale(0.999).symbol);
+		Assert.equals("ms", uinstrument.TimeCalls.autoScale(0.001).symbol);
+		Assert.equals("μs", uinstrument.TimeCalls.autoScale(0.000999).symbol);
+		Assert.equals("μs", uinstrument.TimeCalls.autoScale(0.000001).symbol);
+		Assert.equals("ns", uinstrument.TimeCalls.autoScale(0.000000999).symbol);
+		Assert.equals("ns", uinstrument.TimeCalls.autoScale(0.000000001).symbol);
+		Assert.equals("ns", uinstrument.TimeCalls.autoScale(0.000000000001).symbol);  // unstable: inexistance of p[ico]
 
 		// best results considering use case is Math.round(t*divisor)
-		Assert.equals("s", instrument.TimeCalls.autoScale(59.4).symbol);  // unstable: trigger for min
-		Assert.equals("min", instrument.TimeCalls.autoScale(59.6).symbol);  // unstable: trigger for min
-		Assert.equals("μs", instrument.TimeCalls.autoScale(0.0009994).symbol);
-		Assert.equals("ms", instrument.TimeCalls.autoScale(0.0009996).symbol);
+		Assert.equals("s", uinstrument.TimeCalls.autoScale(59.4).symbol);  // unstable: trigger for min
+		Assert.equals("min", uinstrument.TimeCalls.autoScale(59.6).symbol);  // unstable: trigger for min
+		Assert.equals("μs", uinstrument.TimeCalls.autoScale(0.0009994).symbol);
+		Assert.equals("ms", uinstrument.TimeCalls.autoScale(0.0009996).symbol);
 
 		// regression tests
-		Assert.equals("ms", instrument.TimeCalls.autoScale(0.0069).symbol);
+		Assert.equals("ms", uinstrument.TimeCalls.autoScale(0.0069).symbol);
 	}
 
 	public function test_004_trace_call_args()
 	{
 		var calls = [];
-		instrument.TraceArgs.onCalled =
+		uinstrument.TraceArgs.onCalled =
 			function (args, ?pos)
 			{
 				if (pos.className != "SomeLocks") {
@@ -150,7 +150,7 @@ class Test {
 	public function test_005_sqlite()
 	{
 		var calls = [];
-		instrument.TimeCalls.onTimed =
+		uinstrument.TimeCalls.onTimed =
 			function (start, finish, ?pos)
 			{
 				if (pos.className.indexOf("Sqlite") < 0)
@@ -178,4 +178,3 @@ class Test {
 		r.run();
 	}
 }
-

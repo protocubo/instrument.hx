@@ -1,4 +1,4 @@
-import instrument.Tools.defaultTrace in itrace;
+import uinstrument.Tools.defaultTrace in itrace;
 
 class CallStacks {
 	static function onCalled(?pos:haxe.PosInfos)
@@ -26,8 +26,7 @@ class CallStacks {
 
 	static function main()
 	{
-		instrument.TraceCalls.onCalled = onCalled;
+		uinstrument.TraceCalls.onCalled = onCalled;
 		trace(haxe.Json.parse('{ "value" : 33.3 }'));
 	}
 }
-

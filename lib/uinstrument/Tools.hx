@@ -1,4 +1,4 @@
-package instrument;
+package uinstrument;
 
 class Tools {
 	@:noUsing
@@ -18,4 +18,3 @@ class Tools {
 #end
 	}
 }
-

@@ -1,9 +1,9 @@
 {
-  "name"         :  "instrument",
-  "url"          :  "https://github.com/protocubo/instrument.hx",
+  "name"         :  "uinstrument",
+  "url"          :  "https://github.com/protocubo/uinstrument.hx",
   "license"      :  "BSD",
   "tags"         :  ["cross", "macro"],
-  "description"  :  "Instrumentation micro framework",
+  "description"  :  "Micro instrumentation framework",
   "version"      :  "1.0.0",
   "classPath"    :  "lib",
   "releasenote"  :  "Implement generic instrumentation and trace/time calls helpers",
@@ -11,4 +11,3 @@
   "dependencies" :  {
   }
 }
-

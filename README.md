@@ -16,11 +16,11 @@ class Basic {
 # basic.hxml
 -neko basic.n
 -main Basic
--lib instrument
---macro instrument.TimeCalls.hijack("haxe.Json", "parse")
---macro instrument.TraceCalls.hijack("haxe.format.JsonParser")
---macro instrument.TraceArgs.hijack("Std", "parseFloat")
---macro instrument.TraceArgs.hijack("Std", "int")
+-lib uinstrument
+--macro uinstrument.TimeCalls.hijack("haxe.Json", "parse")
+--macro uinstrument.TraceCalls.hijack("haxe.format.JsonParser")
+--macro uinstrument.TraceArgs.hijack("Std", "parseFloat")
+--macro uinstrument.TraceArgs.hijack("Std", "int")
 ```
 
 ```
@@ -45,8 +45,8 @@ CALL haxe.Json.parse
 CALL Std.parseFloat(x=<33.3>)
 ```
 
-First, for simple call tracing, it's enough to use `instrument.TraceCalls.hijack(<class name>, ?<method name>)`.
-This will adapt the desired methods to call `instrument.TraceCalls.notify` at their beginning.
+First, for simple call tracing, it's enough to use `uinstrument.TraceCalls.hijack(<class name>, ?<method name>)`.
+This will adapt the desired methods to call `uinstrument.TraceCalls.notify` at their beginning.
 
 If, on the other hand, inspection of the arguments is desired, `TraceCalls` should be replaced by `TraceArgs`.
 This will instead call its own `notify` function with an extra `args:Array<{ name:String, value:Dynamic }>` array.
@@ -66,7 +66,7 @@ TIME 102μs on haxe.Json.parse
 
 ```haxe
 // CallStacks.hx
-import instrument.Tools.defaultTrace in itrace;
+import uinstrument.Tools.defaultTrace in itrace;
 
 class CallStacks {
 	static function onCalled(?pos:haxe.PosInfos)
@@ -94,7 +94,7 @@ class CallStacks {
 
 	static function main()
 	{
-		instrument.TraceCalls.onCalled = onCalled;
+		uinstrument.TraceCalls.onCalled = onCalled;
 		trace(haxe.Json.parse('{ "value" : 33.3 }'));
 	}
 }
@@ -104,9 +104,9 @@ class CallStacks {
 # call_stacks.hxml
 -neko call_stacks.n
 -main CallStacks
--lib instrument
---macro instrument.TraceCalls.hijack("haxe.format.JsonParser")
---macro instrument.TraceCalls.hijack("Std")
+-lib uinstrument
+--macro uinstrument.TraceCalls.hijack("haxe.format.JsonParser")
+--macro uinstrument.TraceCalls.hijack("Std")
 ```
 
 ```
@@ -129,7 +129,7 @@ CallStacks.hx:30: { value => 33.3 }
 
 ## Advanced instrumentation
 
-`instrument.Instrument.hijack(<transform>, <class name>, ?<field name>)`
+`uinstrument.Instrument.hijack(<transform>, <class name>, ?<field name>)`
 
 More complex or specific instrumentation can be achivied by directly calling
 the instrumenter with a custom transformation function.
@@ -139,4 +139,3 @@ the instrumenter with a custom transformation function.
  - inline functions are normally ignored; if, however, they are explicitly
    instrumented (as opposed to being inside a class that's being instrumented),
    they will loose their `AInline` access modifier
-

@@ -1,21 +1,20 @@
 -neko test.n
 -main Test
 -cp test
--lib instrument
+-lib uinstrument
 -lib utest
 -D dump=pretty
 # why not
---macro instrument.TimeCalls.hijack("Test")
+--macro uinstrument.TimeCalls.hijack("Test")
 # tests with the SomeLocks
---macro instrument.TraceCalls.hijack("SomeLocks")
---macro instrument.TimeCalls.hijack("SomeLocks")
---macro instrument.TraceArgs.hijack("SomeLocks")
+--macro uinstrument.TraceCalls.hijack("SomeLocks")
+--macro uinstrument.TimeCalls.hijack("SomeLocks")
+--macro uinstrument.TraceArgs.hijack("SomeLocks")
 # tests with sub types
---macro instrument.TraceCalls.hijack("SomeLocks.SubType")
---macro instrument.TraceCalls.hijack("SomeLocks.PrivSubType")
+--macro uinstrument.TraceCalls.hijack("SomeLocks.SubType")
+--macro uinstrument.TraceCalls.hijack("SomeLocks.PrivSubType")
 # SQLite tests
---macro instrument.TimeCalls.hijack("sys.db.Sqlite", "open")
---macro instrument.TimeCalls.hijack("sys.db.Sqlite.SqliteConnection", "request", true)
---macro instrument.TimeCalls.hijack("sys.db.Sqlite.SqliteConnection", "close")
+--macro uinstrument.TimeCalls.hijack("sys.db.Sqlite", "open")
+--macro uinstrument.TimeCalls.hijack("sys.db.Sqlite.SqliteConnection", "request", true)
+--macro uinstrument.TimeCalls.hijack("sys.db.Sqlite.SqliteConnection", "close")
 -cmd neko test.n
-

@@ -1,4 +1,4 @@
-package instrument;
+package uinstrument;
 
 import haxe.macro.Expr;
 using haxe.macro.ExprTools;
@@ -67,7 +67,7 @@ class TimeCalls {
 #if macro
 	// FIXME remove the need for skipFinal?  or, at least, rename it?
 	public static function hijack(type:String, ?field:String, ?skipFinal=false)
-		Instrument.hijack(instrument.TimeCalls.embed.bind(skipFinal), type, field);
+		Instrument.hijack(uinstrument.TimeCalls.embed.bind(skipFinal), type, field);
 
 	static function embedExit(e:Expr):Expr
 	{
@@ -75,19 +75,19 @@ class TimeCalls {
 			switch e.expr {
 			case EReturn(null):
 				macro {
-					@:pos(e.pos) instrument.TimeCalls.onTimed(__ins_start__, Sys.time());
+					@:pos(e.pos) uinstrument.TimeCalls.onTimed(__ins_start__, Sys.time());
 					return;
 				}
 			case EReturn(u) if (u != null):
 				macro {
 					var __ins_ret__ = $u;
-					@:pos(e.pos) instrument.TimeCalls.onTimed(__ins_start__, Sys.time());
+					@:pos(e.pos) uinstrument.TimeCalls.onTimed(__ins_start__, Sys.time());
 					return __ins_ret__;
 				}
 			case EThrow(u):
 				macro {
 					var __ins_ret__ = $u;
-					@:pos(e.pos) instrument.TimeCalls.onTimed(__ins_start__, Sys.time());
+					@:pos(e.pos) uinstrument.TimeCalls.onTimed(__ins_start__, Sys.time());
 					throw __ins_ret__;
 				}
 			case EFunction(_):
@@ -97,7 +97,7 @@ class TimeCalls {
 			}
 	}
 
-	@:allow(instrument.Instrument)
+	@:allow(uinstrument.Instrument)
 	static function embed(skipFinal:Bool, field:Field, fun:Function):Function
 	{
 		if (fun.expr == null)
@@ -108,7 +108,7 @@ class TimeCalls {
 		];
 		if (!skipFinal) {
 			body.push(
-				macro @:pos(fun.expr.pos) instrument.TimeCalls.onTimed(__ins_start__, Sys.time())
+				macro @:pos(fun.expr.pos) uinstrument.TimeCalls.onTimed(__ins_start__, Sys.time())
 			);
 		}
 		fun.expr = macro $b{body};
@@ -116,4 +116,3 @@ class TimeCalls {
 	}
 #end
 }
-
