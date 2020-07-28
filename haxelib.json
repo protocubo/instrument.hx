@@ -8,6 +8,5 @@
   "classPath"    :  "lib",
   "releasenote"  :  "Implement generic instrumentation and trace/time calls helpers",
   "contributors" :  ["jonasmalacofilho", "protocubo"],
-  "dependencies" :  {
-  }
+  "dependencies" :  {}
 }

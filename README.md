@@ -1,6 +1,6 @@
-# µinstrument — Micro framework for Haxe instrumentation
+# µinstrument.hx – Micro framework for Haxe instrumentation
 
-## A complete example
+## A visual example
 
 ```haxe
 // Basic.hx
@@ -26,7 +26,9 @@ class Basic {
 ```
 $ haxe basic.hxml
 uinstrument/Instrument.hx:29: characters 72-74 : Warning : Removing AInline access from haxe.Json.parse
+```
 
+```
 $ neko basic.n
 CALL haxe.format.JsonParser.new
 CALL haxe.format.JsonParser.parseRec
