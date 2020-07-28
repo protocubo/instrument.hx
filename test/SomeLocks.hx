@@ -40,4 +40,3 @@ class SomeLocks {
 	public static function create(size)
 		return new SomeLocks(size);
 }
-

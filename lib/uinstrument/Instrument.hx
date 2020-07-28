@@ -14,7 +14,6 @@ class Instrument {
 
 	public static function instrument(id:Int, type:String, ?only:String)
 	{
-		// EXPLORE give more control to the implementation (e.g. change field properties)
 		var embed = methods[id];
 		var fields = Context.getBuildFields();
 		var noInline = Context.defined("no_inline");
@@ -37,8 +36,6 @@ class Instrument {
 		return fields;
 	}
 
-	// EXPLORE use path filters instead of explicit types
-	// EXPLORE allow field filters
 	public static function hijack(embed:Field->Function->Function, type:String, ?field:String)
 	{
 		var id = methods.push(embed) - 1;

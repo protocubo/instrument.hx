@@ -4,4 +4,3 @@ class Basic {
 		trace(haxe.Json.parse('{ "value" : 33.3 }'));
 	}
 }
-

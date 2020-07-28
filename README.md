@@ -1,4 +1,4 @@
-# Instrumentation micro framework
+# µinstrument — Micro framework for Haxe instrumentation
 
 ## A complete example
 
@@ -24,6 +24,9 @@ class Basic {
 ```
 
 ```
+$ haxe basic.hxml
+uinstrument/Instrument.hx:29: characters 72-74 : Warning : Removing AInline access from haxe.Json.parse
+
 $ neko basic.n
 CALL haxe.format.JsonParser.new
 CALL haxe.format.JsonParser.parseRec
@@ -110,6 +113,8 @@ class CallStacks {
 ```
 
 ```
+$ haxe call_stacks.hxml
+
 $ neko call_stacks.n
 CALL Std.__init__
 CALL haxe.format.JsonParser.new
@@ -131,11 +136,11 @@ CallStacks.hx:30: { value => 33.3 }
 
 `uinstrument.Instrument.hijack(<transform>, <class name>, ?<field name>)`
 
-More complex or specific instrumentation can be achivied by directly calling
+More complex or specific instrumentation can be achieved by directly calling
 the instrumenter with a custom transformation function.
 
 ## Notes
 
- - inline functions are normally ignored; if, however, they are explicitly
+1. Inline functions are normally ignored; if, however, they are explicitly
    instrumented (as opposed to being inside a class that's being instrumented),
-   they will loose their `AInline` access modifier
+   they will loose their `AInline` access modifier.

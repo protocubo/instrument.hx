@@ -3,7 +3,7 @@
   "url"          :  "https://github.com/protocubo/uinstrument.hx",
   "license"      :  "BSD",
   "tags"         :  ["cross", "macro"],
-  "description"  :  "Micro instrumentation framework",
+  "description"  :  "Micro framework for Haxe instrumentation",
   "version"      :  "1.0.0",
   "classPath"    :  "lib",
   "releasenote"  :  "Implement generic instrumentation and trace/time calls helpers",
