@@ -2,7 +2,8 @@
 _Micro framework for Haxe instrumentation_
 
 1. _[A visual example](#a-visual-example)_
-2. _[Tracing calls and arguments](#tracing-calls-and-arguments)_
+2. _[Tracing calls and arguments](#tracing-calls-and-arguments)_  
+   2.1. _[Debugging database requests](#debugging-database-requests)_
 3. _[Timing calls](#timing-calls)_
 4. _[Customizing the callbacks](#customizing-the-callbacks)_
 5. _[Advanced instrumentation](#advanced-instrumentation)_
@@ -98,9 +99,14 @@ CALL Std.int(x=<33.3>)
 Basic.hx:4: { value => 33.3 }
 ```
 
-Tracing arguments can be used, for example, to debug database accesses
-performed by record-macros managers, or to analyze the behavior of other
-complex macro-generated pieces of code.
+Note that `TraceCalls.notify` and `TraceArgs.notify` are `dynamic` functions
+and can be replaced at runtime: see [_Customizing the callbacks: tracing call
+stacks_](#customizing-the-callbacks) for an example.
+
+### Debugging database requests
+
+Tracing calls and arguments can be used to debug database requests, which can
+be particularly helpful when a project uses record-macros.
 
 ```hxml
 -lib uinstrument
@@ -108,13 +114,9 @@ complex macro-generated pieces of code.
 --macro uinstrument.TraceArgs.hijack("sys.db.Mysql.MysqlConnection", "request")
 ```
 
-_(Of course you should not leave this on in production; at the very least make
-sure to sanitize the output so no sensitive information ever gets stored in log
-files)._
-
-Note that `TraceCalls.notify` and `TraceArgs.notify` are `dynamic` functions
-and can be replaced at runtime: see [_Customizing the callbacks: tracing call
-stacks_] (#customizing-the-callbacks) for an example.
+_(You probably do not want to leave this on in production; at the very least
+make sure to sanitize the output so no sensitive information ever gets stored
+in log files)._
 
 ## Timing calls
 
@@ -123,8 +125,8 @@ name>, ?<method name>)` can be used to track the amount of time spent in some
 functions of interest.
 
 By default the time spent is traced for every call, but [_customizing the
-callbacks_] (#customizing-the-callbacks) allows these
-results to be manipulated freely, for example for aggregation or plotting.
+callbacks_](#customizing-the-callbacks) allows these results to be manipulated
+freely, for example for aggregation or plotting.
 
 ```hxml
 # basic.hxml
