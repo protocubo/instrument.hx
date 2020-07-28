@@ -53,7 +53,7 @@ Basic.hx:4: { value => 33.3 }
 
 For simple call tracing, it's enough to use
 `uinstrument.TraceCalls.hijack(<class name>, ?<method name>)`.  This will adapt
-the desired methods to call `uinstrument.TraceCalls.notify` at their beginning.
+the desired methods to call `uinstrument.TraceCalls.onCalled` at their beginning.
 
 ```hxml
 # basic.hxml
@@ -76,9 +76,8 @@ Basic.hx:4: { value => 33.3 }
 ```
 
 If, on the other hand, inspection of the arguments is desired, `TraceCalls`
-should be replaced by `TraceArgs`: this will instead call its `notify` function
-with an extra `args:Array<{ name:String, value:Dynamic }>` array.  The
-arguments for `TraceArgs` are the same as those for `TraceCalls`.
+should be replaced by `TraceArgs`: this will instead call its `onCalled`
+function with an extra `args:Array<{ name:String, value:Dynamic }>` array.
 
 ```hxml
 # basic.hxml
@@ -99,9 +98,9 @@ CALL Std.int(x=<33.3>)
 Basic.hx:4: { value => 33.3 }
 ```
 
-Note that `TraceCalls.notify` and `TraceArgs.notify` are `dynamic` functions
-and can be replaced at runtime: see [_Customizing the callbacks: tracing call
-stacks_](#customizing-the-callbacks) for an example.
+Note that `TraceCalls.onCalled` and `TraceArgs.onCalled` are `dynamic`
+functions and can be replaced at runtime: see [_Customizing the callbacks:
+tracing call stacks_](#customizing-the-callbacks).
 
 ### Debugging database requests
 
@@ -125,8 +124,9 @@ name>, ?<method name>)` can be used to track the amount of time spent in some
 functions of interest.
 
 By default the time spent is traced for every call, but [_customizing the
-callbacks_](#customizing-the-callbacks) allows these results to be manipulated
-freely, for example for aggregation or plotting.
+callback_](#customizing-the-callbacks) by replacing `TimeCalls.onTime` allows
+these results to be manipulated freely, for example for aggregation or
+plotting.
 
 ```hxml
 # basic.hxml
@@ -147,6 +147,11 @@ Basic.hx:4: { value => 33.3 }
 
 ## Customizing the callbacks
 
+As alluded before, it is possible to replace the callbacks from `TraceCalls`,
+`TraceArgs` and `TimeCalls` with arbitrary functions.
+
+For a simple example, let us include part of the stack when tracing each call.
+
 ```haxe
 // CallStacks.hx
 import uinstrument.Tools.defaultTrace in itrace;
@@ -155,24 +160,18 @@ class CallStacks {
 	static function onCalled(?pos:haxe.PosInfos)
 	{
 		itrace('CALL ${pos.className}.${pos.methodName}', pos);
-		if (pos.className == "Std") {
-			/*
-			trace the call stack as well
 
-			for this, use haxe.CallStack.callStack, but:
-			 - remove the calls to this and the instrumented functions
-			 - limit the number of call stack items traced
-			*/
-			var cs = haxe.CallStack.callStack();
-			var pcs = cs.slice(2, 4);
-			for (i in haxe.CallStack.toString(pcs).split("\n")) {
-				if (StringTools.trim(i) != "")
-					itrace(' └╴ $i', pos);
-			}
-			var ommited = cs.length - pcs.length - 2;
-			if (ommited > 0)
-				itrace('    [$ommited ommited]', pos);
+		// remove onCalled and the instrumented function, and limit the
+		// number of call stack items to display to two
+		var cs = haxe.CallStack.callStack();
+		var pcs = cs.slice(2, 4);
+		for (i in haxe.CallStack.toString(pcs).split("\n")) {
+			if (StringTools.trim(i) != "")
+				itrace(' └╴ $i', pos);
 		}
+		var ommited = cs.length - pcs.length - 2;
+		if (ommited > 0)
+			itrace('    [$ommited ommited]', pos);
 	}
 
 	static function main()
@@ -188,7 +187,6 @@ class CallStacks {
 -neko call_stacks.n
 -main CallStacks
 -lib uinstrument
---macro uinstrument.TraceCalls.hijack("haxe.format.JsonParser")
 --macro uinstrument.TraceCalls.hijack("Std")
 ```
 
@@ -197,19 +195,19 @@ $ haxe call_stacks.hxml
 
 $ neko call_stacks.n
 CALL Std.__init__
-CALL haxe.format.JsonParser.new
-CALL haxe.format.JsonParser.parseRec
-CALL haxe.format.JsonParser.parseString
-CALL haxe.format.JsonParser.parseRec
 CALL Std.parseFloat
- └╴ Called from /usr/lib/haxe/std/haxe/format/JsonParser.hx line 131
- └╴ Called from /usr/lib/haxe/std/haxe/format/JsonParser.hx line 76
-    [2 ommited]
+ └╴ Called from /usr/local/share/haxe/std/haxe/format/JsonParser.hx line 145
+ └╴ Called from /usr/local/share/haxe/std/haxe/format/JsonParser.hx line 90
+    [3 ommited]
 CALL Std.int
- └╴ Called from /usr/lib/haxe/std/haxe/format/JsonParser.hx line 131
- └╴ Called from /usr/lib/haxe/std/haxe/format/JsonParser.hx line 76
+ └╴ Called from /usr/local/share/haxe/std/haxe/format/JsonParser.hx line 145
+ └╴ Called from /usr/local/share/haxe/std/haxe/format/JsonParser.hx line 90
+    [3 ommited]
+CALL Std.string
+ └╴ Called from /usr/local/share/haxe/std/haxe/Log.hx line 34
+ └╴ Called from /usr/local/share/haxe/std/haxe/Log.hx line 63
     [2 ommited]
-CallStacks.hx:30: { value => 33.3 }
+CallStacks.hx:24: { value => 33.3 }
 ```
 
 ## Advanced instrumentation
