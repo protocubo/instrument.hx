@@ -1,4 +1,12 @@
-# µinstrument.hx – Micro framework for Haxe instrumentation
+# µinstrument.hx
+_Micro framework for Haxe instrumentation_
+
+1. _[A visual example](#a-visual-example)_
+2. _[Tracing calls and arguments](#tracing-calls-and-arguments)_
+3. _[Timing calls](#timing-calls)_
+4. _[Customizing the callbacks](#customizing-the-callbacks)_
+5. _[Advanced instrumentation](#advanced-instrumentation)_
+6. _[Notes](#notes)_
 
 ## A visual example
 
@@ -106,7 +114,7 @@ files)._
 
 Note that `TraceCalls.notify` and `TraceArgs.notify` are `dynamic` functions
 and can be replaced at runtime: see [_Customizing the callbacks: tracing call
-stacks_] (#customizing-the-callbacks-tracing-call-stacks) for an example.
+stacks_] (#customizing-the-callbacks) for an example.
 
 ## Timing calls
 
@@ -115,7 +123,7 @@ name>, ?<method name>)` can be used to track the amount of time spent in some
 functions of interest.
 
 By default the time spent is traced for every call, but [_customizing the
-callbacks_] (#customizing-the-callbacks-tracing-call-stacks) allows these
+callbacks_] (#customizing-the-callbacks) allows these
 results to be manipulated freely, for example for aggregation or plotting.
 
 ```hxml
@@ -135,7 +143,7 @@ TIME 186μs on haxe.Json.parse
 Basic.hx:4: { value => 33.3 }
 ```
 
-## Customizing the callbacks: tracing call stacks
+## Customizing the callbacks
 
 ```haxe
 // CallStacks.hx
