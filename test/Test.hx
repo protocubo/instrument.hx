@@ -1,11 +1,9 @@
 import utest.Assert;
 
-class Test {
+class Test extends utest.Test {
 	var onCalledCopy = uinstrument.TraceCalls.onCalled;
 	var onTimedCopy = uinstrument.TimeCalls.onTimed;
 	var onCalled2Copy = uinstrument.TraceArgs.onCalled;
-
-	function new() {}
 
 	public function setup()
 	{
